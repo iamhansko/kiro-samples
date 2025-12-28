@@ -1,0 +1,272 @@
+[gd_scene load_steps=7 format=3 uid="uid://main_scene"]
+
+[ext_resource type="Script" path="res://scripts/game_manager.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/globe.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/ui.gd" id="3"]
+[ext_resource type="Script" path="res://scripts/world_map_drawer.gd" id="4"]
+[ext_resource type="Script" path="res://scripts/pole_markers.gd" id="5"]
+[ext_resource type="Script" path="res://scripts/crosshair_lines.gd" id="6"]
+
+[sub_resource type="SphereShape3D" id="sphere_collision"]
+radius = 2.0
+
+[node name="GameManager" type="Node"]
+script = ExtResource("1")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
+fov = 60.0
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 5, 5)
+light_energy = 1.5
+shadow_enabled = true
+
+[node name="Globe" type="Node3D" parent="."]
+script = ExtResource("2")
+
+[node name="GlobeMesh" type="MeshInstance3D" parent="Globe"]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Globe/GlobeMesh"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Globe/GlobeMesh/StaticBody3D"]
+shape = SubResource("sphere_collision")
+
+[node name="WorldMapDrawer" type="Node3D" parent="Globe"]
+script = ExtResource("4")
+
+[node name="PoleMarkers" type="Node3D" parent="Globe"]
+script = ExtResource("5")
+
+[node name="CrosshairLines" type="Node3D" parent="Globe"]
+script = ExtResource("6")
+
+[node name="UI" type="CanvasLayer" parent="."]
+layer = 10
+script = ExtResource("3")
+
+[node name="Control" type="Control" parent="UI"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/Control"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 250.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/Control/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 5
+
+[node name="ScoreLabel" type="Label" parent="UI/Control/MarginContainer/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 14
+text = "점수: 0"
+
+[node name="TargetCountryLabel" type="Label" parent="UI/Control/MarginContainer/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "Find:"
+
+[node name="FlagDisplay" type="TextureRect" parent="UI/Control/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(80, 53)
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="QuestionLabel" type="Label" parent="UI/Control/MarginContainer/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 14
+text = ""
+
+[node name="FeedbackLabel" type="Label" parent="UI/Control/MarginContainer/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 14
+text = ""
+
+[node name="CrosshairInfoLabel" type="Label" parent="UI/Control"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -250.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 120.0
+grow_horizontal = 0
+mouse_filter = 2
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "국가: --
+위도: --
+경도: --"
+horizontal_alignment = 2
+
+[node name="DirectionToggle" type="CheckButton" parent="UI/Control"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -150.0
+offset_top = -50.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 14
+text = "Direction"
+
+[node name="BottomLeftPanel" type="VBoxContainer" parent="UI/Control"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = -140.0
+offset_right = 140.0
+offset_bottom = -20.0
+grow_vertical = 0
+theme_override_constants/separation = 10
+
+[node name="ResetButton" type="Button" parent="UI/Control/BottomLeftPanel"]
+custom_minimum_size = Vector2(100, 30)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Reset"
+
+[node name="SubmitButton" type="Button" parent="UI/Control/BottomLeftPanel"]
+custom_minimum_size = Vector2(100, 30)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Submit"
+
+[node name="HintButton" type="Button" parent="UI/Control/BottomLeftPanel"]
+custom_minimum_size = Vector2(100, 30)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Hint"
+
+[node name="Crosshair" type="Control" parent="UI/Control"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -10.0
+offset_top = -10.0
+offset_right = 10.0
+offset_bottom = 10.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="HorizontalLine" type="ColorRect" parent="UI/Control/Crosshair"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -8.0
+offset_top = -0.5
+offset_right = 8.0
+offset_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 1, 0, 1)
+
+[node name="VerticalLine" type="ColorRect" parent="UI/Control/Crosshair"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -0.5
+offset_top = -8.0
+offset_right = 0.5
+offset_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 1, 0, 1)
+
+[node name="CompassLabels" type="Control" parent="UI/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="NorthLabel" type="Label" parent="UI/Control/CompassLabels"]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+theme_override_font_sizes/font_size = 28
+theme_override_colors/font_color = Color(1, 1, 1, 0.8)
+text = "N"
+horizontal_alignment = 1
+
+[node name="SouthLabel" type="Label" parent="UI/Control/CompassLabels"]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+theme_override_font_sizes/font_size = 28
+theme_override_colors/font_color = Color(1, 1, 1, 0.8)
+text = "S"
+horizontal_alignment = 1
+
+[node name="EastLabel" type="Label" parent="UI/Control/CompassLabels"]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+theme_override_font_sizes/font_size = 28
+theme_override_colors/font_color = Color(1, 1, 1, 0.8)
+text = "E"
+horizontal_alignment = 1
+
+[node name="WestLabel" type="Label" parent="UI/Control/CompassLabels"]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+theme_override_font_sizes/font_size = 28
+theme_override_colors/font_color = Color(1, 1, 1, 0.8)
+text = "W"
+horizontal_alignment = 1
